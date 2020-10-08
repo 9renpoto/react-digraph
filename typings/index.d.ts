@@ -30,10 +30,10 @@ declare module 'react-digraph' {
   };
 
   export type IBBox = {
-    x: number,
-    y: number,
-    width: number,
-    height: number,
+    x: number;
+    y: number;
+    width: number;
+    height: number;
   };
 
   export type INodeProps = {
@@ -112,9 +112,9 @@ declare module 'react-digraph' {
     nodeKey: string;
     nodes: any[];
     nodeSize?: number;
-    nodeHeight?: number,
-    nodeWidth?: number,
-    nodeSpacingMultiplier?: number,
+    nodeHeight?: number;
+    nodeWidth?: number;
+    nodeSpacingMultiplier?: number;
     nodeSubtypes: any;
     nodeTypes: any;
     readOnly?: boolean;
@@ -129,8 +129,8 @@ declare module 'react-digraph' {
       sourceNode: INode,
       hoveredNode: INode | null,
       swapEdge: IEdge
-    ) => boolean,
-    onBackgroundClick?: (x: number, y: number, event: any) => void,
+    ) => boolean;
+    onBackgroundClick?: (x: number, y: number, event: any) => void;
     onCopySelected?: () => void;
     onCreateEdge?: (sourceNode: INode, targetNode: INode) => void;
     onCreateNode?: (x: number, y: number, event: any) => void;
@@ -138,8 +138,8 @@ declare module 'react-digraph' {
     onDeleteNode?: (selected: any, nodeId: string, nodes: any[]) => void;
     onPasteSelected?: (
       selectedNode: INode,
-      xyCoords?: { x: number, y: number }
-    ) => void,
+      xyCoords?: { x: number; y: number }
+    ) => void;
     onSelectEdge?: (selectedEdge: IEdge) => void;
     onSelectNode?: (node: INode | null, event: any) => void;
     onSwapEdge?: (sourceNode: INode, targetNode: INode, edge: IEdge) => void;
@@ -194,7 +194,11 @@ declare module 'react-digraph' {
     static revert(graphInput: IGraphInput): any;
   }
 
-  export type LayoutEngineType = 'None' | 'SnapToGrid' | 'VerticalTree' | 'HorizontalTree';
+  export type LayoutEngineType =
+    | 'None'
+    | 'SnapToGrid'
+    | 'VerticalTree'
+    | 'HorizontalTree';
 
   export const GraphView: React.ComponentClass<IGraphViewProps>;
   export type INodeMapNode = {
