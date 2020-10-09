@@ -40,7 +40,10 @@ class Defs extends React.Component<IDefsProps, IDefsState> {
     renderDefs: () => null,
   };
 
-  static getDerivedStateFromProps(nextProps: any, prevState: any) {
+  static getDerivedStateFromProps(
+    nextProps: IDefsProps,
+    _prevState: IDefsState
+  ) {
     const graphConfigDefs: unknown = [];
 
     this.processGraphConfigDefs(nextProps.nodeTypes, graphConfigDefs);

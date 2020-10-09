@@ -50,8 +50,8 @@ type IEdgeProps = {
   targetNode: INode | ITargetPosition;
   isSelected: boolean;
   nodeKey: string;
-  viewWrapperElem: HTMLDivElement;
-  rotateEdgeHandle: true;
+  viewWrapperElem: HTMLDivElement | null;
+  rotateEdgeHandle?: boolean;
 };
 
 class Edge extends React.Component<IEdgeProps> {
@@ -104,13 +104,16 @@ class Edge extends React.Component<IEdgeProps> {
     return size;
   }
 
-  static getEdgePathElement(edge: IEdge, viewWrapperElem: HTMLDivElement) {
-    return viewWrapperElem.querySelector(
+  static getEdgePathElement(
+    edge: IEdge,
+    viewWrapperElem: HTMLDivElement | null
+  ) {
+    return viewWrapperElem?.querySelector(
       `[id='edge-${edge.source}-${edge.target}-container']>.edge-container>.edge>.edge-path`
     );
   }
 
-  static parsePathToXY(edgePathElement: Element | null) {
+  static parsePathToXY(edgePathElement?: Element | null) {
     const response = {
       source: { x: 0, y: 0 },
       target: { x: 0, y: 0 },
@@ -418,8 +421,8 @@ class Edge extends React.Component<IEdgeProps> {
     src: any,
     trg: any,
     nodeKey: string,
-    includesArrow?: boolean = true,
-    viewWrapperElem: HTMLDivElement
+    includesArrow = true,
+    viewWrapperElem?: HTMLDivElement | null
   ) {
     let response = Edge.getDefaultIntersectResponse();
 
@@ -432,7 +435,7 @@ class Edge extends React.Component<IEdgeProps> {
     // 0.31ms and 99us for document.getElementById()
     // Although it doesn't allow multiple graphs.
     // We can use viewWrapperElem to scope the querySelector to a smaller set of elements to improve the speed
-    const nodeElem = viewWrapperElem.querySelector(
+    const nodeElem = viewWrapperElem?.querySelector(
       `[id='node-${trg[nodeKey]}']`
     );
 

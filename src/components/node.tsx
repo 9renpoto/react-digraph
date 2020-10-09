@@ -64,7 +64,7 @@ type INodeProps = {
   renderNodeText?: (data: any, id: string | number, isSelected: boolean) => any;
   isSelected: boolean;
   layoutEngine?: any;
-  viewWrapperElem: HTMLDivElement;
+  viewWrapperElem: HTMLDivElement | null;
   centerNodeOnMove: boolean;
   maxTitleChars: number;
 };
@@ -104,7 +104,7 @@ class Node extends React.Component<INodeProps, INodeState> {
 
   static getDerivedStateFromProps(
     nextProps: INodeProps,
-    prevState: INodeState
+    _prevState: INodeState
   ) {
     return {
       selected: nextProps.isSelected,

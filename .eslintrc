@@ -13,7 +13,7 @@
     "jest/globals": true,
     "node": true
   },
-  "extends": ["plugin:prettier/recommended"],
+  "extends": ["plugin:prettier/recommended", "plugin:react/recommended"],
   "rules": {
     "prettier/prettier": [
       "error",
@@ -25,7 +25,6 @@
       }
     ],
     "react/no-deprecated": ["warn"],
-    "flowtype/space-after-type-colon": ["off"],
     "curly": ["error", "all"],
     "no-var": "error",
     "prefer-const": "error",
@@ -51,9 +50,6 @@
     "no-useless-constructor": "error"
   },
   "settings": {
-    "flowtype": {
-      "onlyFilesWithFlowAnnotation": true
-    },
     "react": {
       "version": "detect"
     }

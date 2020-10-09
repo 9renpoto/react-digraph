@@ -45,7 +45,7 @@ type IGraphViewState = {
   hoveredNode: boolean;
   nodesMap: any;
   edgesMap: any;
-  nodes: any[];
+  nodes: INode[];
   edges: any[];
   selectingNode: boolean;
   hoveredNodeData: INode | null;
@@ -503,7 +503,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
 
     // inform consumer
     if (onSelectNode) {
-      onSelectNode(null);
+      onSelectNode(null, null);
     }
 
     if (onDeleteNode) {
@@ -904,7 +904,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     }
   };
 
-  handleNodeMouseLeave = (event: any, data: any) => {
+  handleNodeMouseLeave = (event: any): void => {
     if (
       (d3.event &&
         d3.event.toElement &&
@@ -1014,7 +1014,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     }
   }
 
-  handleZoomStart = (event: any) => {
+  handleZoomStart = (event: any): void => {
     // Zoom start events also handle edge clicks. We need to determine if an edge
     // was clicked and deal with that scenario.
     const sourceEvent = event.sourceEvent;
@@ -1030,7 +1030,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       (sourceEvent &&
         !sourceEvent.target.classList.contains('edge-overlay-path'))
     ) {
-      return false;
+      return;
     }
 
     // Clicked on the edge.
@@ -1043,7 +1043,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
 
     // Only move edges if the arrow is dragged
     if (!this.isArrowClicked(edge) || !edge) {
-      return false;
+      return;
     }
 
     this.removeEdgeElement(edge.source, edge.target);
@@ -1061,7 +1061,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     return mouseCoordinates;
   }
 
-  dragEdge(draggedEdge?: IEdge, mouse: typeof d3.mouse) {
+  dragEdge(draggedEdge: IEdge | null, mouse: typeof d3.mouse) {
     const { nodeSize, nodeKey } = this.props;
 
     draggedEdge = draggedEdge || this.state.draggedEdge;
@@ -1093,7 +1093,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
   }
 
   // View 'zoom' handler
-  handleZoom = (event: any) => {
+  handleZoom = (event: any): void => {
     const { draggingEdge } = this.state;
     const transform: IViewTransform = event.transform;
 
@@ -1115,13 +1115,11 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
         );
       }
     } else if (draggingEdge) {
-      this.dragEdge(undefined, d3.mouse);
-
-      return false;
+      this.dragEdge(null, d3.mouse);
     }
   };
 
-  handleZoomEnd = () => {
+  handleZoomEnd = (): void => {
     const { draggingEdge, draggedEdge, edgeEndNode } = this.state;
 
     const { nodeKey, onSwapEdge } = this.props;
@@ -1210,8 +1208,8 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     }
 
     const parent = d3.select(this.viewWrapper.current).node();
-    const width = parent.clientWidth;
-    const height = parent.clientHeight;
+    const width = parent ? parent.clientWidth : 0;
+    const height = parent ? parent.clientHeight : 0;
     const minZoom = this.props.minZoom || 0;
     const maxZoom = this.props.maxZoom || 2;
 
@@ -1252,8 +1250,8 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
   ) => {
     const parent = d3.select(this.viewWrapper.current).node();
     const center = {
-      x: parent.clientWidth / 2,
-      y: parent.clientHeight / 2,
+      x: parent ? parent.clientWidth / 2 : 0,
+      y: parent ? parent.clientHeight / 2 : 0,
     };
     const extent = this.zoom.scaleExtent();
     const viewTransform: any = this.state.viewTransform;
@@ -1350,7 +1348,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       return;
     }
 
-    this.state.nodes.forEach((node, i) => {
+    this.state.nodes.forEach((node) => {
       this.asyncRenderNode(node);
     });
   };
@@ -1380,7 +1378,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
 
   renderNode(id: string, element: Element) {
     if (!this.entities) {
-      return null;
+      return;
     }
 
     const containerId = `${id}-container`;
@@ -1388,7 +1386,10 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     let nodeContainer:
       | HTMLElement
       | Element
-      | null = this.viewWrapper.current.querySelector(`[id='${containerId}']`);
+      | null
+      | undefined = this.viewWrapper.current?.querySelector(
+      `[id='${containerId}']`
+    );
 
     if (!nodeContainer) {
       nodeContainer = document.createElementNS(
@@ -1469,22 +1470,22 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     const customContainerId = `${id}-custom-container`;
     const { draggedEdge } = this.state;
     const { afterRenderEdge } = this.props;
-    let edgeContainer = this.viewWrapper.current.querySelector(
+    let edgeContainer = this.viewWrapper.current?.querySelector(
       `[id='${containerId}']`
     );
 
     if (nodeMoving && edgeContainer) {
-      edgeContainer.style.display = 'none';
+      (edgeContainer as any).style.display = 'none';
       containerId = `${id}-custom-container`;
-      edgeContainer = this.viewWrapper.current.querySelector(
+      edgeContainer = this.viewWrapper.current?.querySelector(
         `[id='${containerId}']`
       );
     } else if (edgeContainer) {
-      const customContainer = this.viewWrapper.current.querySelector(
+      const customContainer = this.viewWrapper.current?.querySelector(
         `[id='${customContainerId}']`
       );
 
-      edgeContainer.style.display = '';
+      (edgeContainer as any).style.display = '';
 
       if (customContainer) {
         customContainer.remove();
@@ -1572,7 +1573,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       return;
     }
 
-    const graphControlsWrapper = this.viewWrapper.current.querySelector(
+    const graphControlsWrapper = this.viewWrapper.current?.querySelector(
       '#react-digraph-graph-controls-wrapper'
     );
 
