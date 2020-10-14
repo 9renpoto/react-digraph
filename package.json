@@ -54,7 +54,7 @@
     "brace": "^0.11.1",
     "browserify": "^14.4.0",
     "copy-webpack-plugin": "^4.5.2",
-    "css-loader": "^4.3.0",
+    "css-loader": "^5.0.0",
     "enzyme": "3.8.0",
     "enzyme-adapter-react-16": "^1.10.0",
     "eslint": "^5.2.0",
